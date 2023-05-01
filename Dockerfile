@@ -8,6 +8,8 @@ RUN mkdir -p /root/app
 
 WORKDIR /root/app
 
+RUN mkdir tmp
+
 COPY . .
 
 RUN npm ci

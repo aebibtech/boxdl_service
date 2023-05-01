@@ -4,6 +4,7 @@ const cors = require('cors');
 const puppeteer = require('puppeteer');
 require('express-zip');
 const fs = require('fs');
+const path = require('path');
 const { execSync } = require("child_process");
 const app = express();
 
@@ -17,7 +18,7 @@ function urlChecker(url){
 
 app.post("/download", async function(req, res){
     const currentDate = Date.now();
-    fs.mkdirSync(`./tmp/${currentDate}`);
+    fs.mkdirSync(path.join(__dirname, "/tmp", `/${currentDate}`)); // `./tmp/${currentDate}`
     const filePaths = [];
     const links = req.body.links;
     let realTitle = "";
@@ -40,7 +41,7 @@ app.post("/download", async function(req, res){
         const title = await page.title();
         realTitle = title !== null ? title.slice(0, title.indexOf("|") - 1) : realTitle;
         if(realTitle !== ""){
-            filePaths.push({ name: `${realTitle}.pdf`, path: `./tmp/${currentDate}/${realTitle}.pdf` });
+            filePaths.push({ name: `${realTitle}.pdf`, path: path.join(__dirname, "/tmp", `/${currentDate}`, `/${realTitle}.pdf`) }); // `./tmp/${currentDate}/${realTitle}.pdf`
         }
         console.log("page title:", realTitle);
         const networkRequestsStr = await page.evaluate(function(){
@@ -60,7 +61,7 @@ app.post("/download", async function(req, res){
         if(downloadUrl !== ""){
             console.log(downloadUrl);
             try{
-                const result = execSync(`wget -O "./tmp/${currentDate}/${realTitle}.pdf" ${downloadUrl}`);
+                const result = execSync(`wget -O "${path.join(__dirname, "/tmp", `/${currentDate}`, `/${realTitle}.pdf`)}" ${downloadUrl}`);
             }catch(e){
                 console.log(e);
             }
