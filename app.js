@@ -38,9 +38,9 @@ app.post("/download", async function(req, res){
         await page.setViewport({ width: 1280, height: 720 });
         await page.goto(links[i], { waitUntil: "networkidle0" });
         const title = await page.title();
-        realTitle = title !== null ? title.slice(0, title.indexOf(".")) : realTitle;
+        realTitle = title !== null ? title.slice(0, title.indexOf("|") - 1) : realTitle;
         if(realTitle !== ""){
-            filePaths.push({ name: realTitle + ".pdf", path: "./tmp/" + currentDate + "/" + realTitle + ".pdf" });
+            filePaths.push({ name: `${realTitle}.pdf`, path: `./tmp/${currentDate}/${realTitle}.pdf` });
         }
         console.log("page title:", realTitle);
         const networkRequestsStr = await page.evaluate(function(){
@@ -60,7 +60,7 @@ app.post("/download", async function(req, res){
         if(downloadUrl !== ""){
             console.log(downloadUrl);
             try{
-                const result = execSync(`wget -O ./tmp/${currentDate}/${realTitle}.pdf ${downloadUrl}`);
+                const result = execSync(`wget -O "./tmp/${currentDate}/${realTitle}.pdf" ${downloadUrl}`);
             }catch(e){
                 console.log(e);
             }
@@ -70,7 +70,7 @@ app.post("/download", async function(req, res){
     }
     console.log(filePaths);
     if(filePaths.length === 1){
-        res.download(filePaths[0].path, realTitle + ".pdf");
+        res.download(filePaths[0].path, filePaths[0].name);
     }else{
         res.zip(filePaths, currentDate);
     }
