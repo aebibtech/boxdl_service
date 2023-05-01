@@ -55,13 +55,13 @@ app.post("/download", async function(req, res){
             else if(networkRequests[j].name.includes("internal_files") && networkRequests[j].name.includes("pdf")){
                 downloadUrl = networkRequests[j].name;
             }
+            filePaths.push({ name: realTitle + ".pdf", path: "./tmp/" + currentDate + "/" + realTitle + ".pdf" });
         }
         
         if(downloadUrl !== ""){
             console.log(downloadUrl);
             try{
                 const result = execSync(`wget -O ./tmp/${currentDate}/${realTitle}.pdf ${downloadUrl}`);
-                filePaths.push({ name: realTitle + ".pdf", path: "./tmp/" + currentDate + "/" + realTitle + ".pdf" });
             }catch(e){
                 console.log(e);
             }
