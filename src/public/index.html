@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js" integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="./requester.js"></script>
+        <link rel="stylesheet" href="./style.css">
+        <title>BoxDL</title>
+    </head>
+    <body class="container-fluid bg-light">
+        <noscript>This app requires JavaScript enabled in order to function.</noscript>
+        <main class="container bg-dark text-light w-50 vh-100 p-3">
+            <h1 class="mb-3 display-1"><samp>BoxDL</samp></h1>
+            <form style="height: 300px;">
+                <label class="form-label mb-3" for="links">Paste box.com links here (Separate by space or new line)</label>
+                <textarea class="mb-3 form-control resize-none h-50" name="links" id="links"></textarea>
+                <input class="btn btn-secondary" type="submit" value="Download">
+            </form>
+        </main>
+    </body>
+</html>

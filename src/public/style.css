@@ -1,0 +1,9 @@
+textarea{
+    resize: none;
+}
+
+@media screen and (max-width: 879px) {
+    .container{
+        width: 100%!important;
+    }
+}
