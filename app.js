@@ -51,11 +51,12 @@ app.post("/download", async function(req, res){
             // console.log(networkRequests[j].name);
             if( (networkRequests[j].name.includes("public.boxcloud.com/api/2.0/files") || "dl.boxcloud.com/api/2.0/files") && networkRequests[j].name.includes("content?preview=true") ){
                 downloadUrl = networkRequests[j].name;
+                filePaths.push({ name: realTitle + ".pdf", path: "./tmp/" + currentDate + "/" + realTitle + ".pdf" });
             }
             else if(networkRequests[j].name.includes("internal_files") && networkRequests[j].name.includes("pdf")){
                 downloadUrl = networkRequests[j].name;
+                filePaths.push({ name: realTitle + ".pdf", path: "./tmp/" + currentDate + "/" + realTitle + ".pdf" });
             }
-            filePaths.push({ name: realTitle + ".pdf", path: "./tmp/" + currentDate + "/" + realTitle + ".pdf" });
         }
         
         if(downloadUrl !== ""){
