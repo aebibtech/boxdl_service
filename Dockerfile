@@ -7,6 +7,8 @@ WORKDIR /usr/src/app
 
 RUN mkdir tmp
 
+RUN chmod 755 tmp
+
 COPY package*.json ./
 
 RUN npm ci
