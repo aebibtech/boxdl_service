@@ -4,7 +4,7 @@ const cors = require('cors');
 const puppeteer = require('puppeteer');
 require('express-zip');
 const fs = require('fs');
-const { exec } = require("child_process");
+const { execSync } = require("child_process");
 const app = express();
 
 app.use(bodyParser.json());
@@ -59,26 +59,22 @@ app.post("/download", async function(req, res){
         
         if(downloadUrl !== ""){
             console.log(downloadUrl);
-            // const dl = new DownloaderHelper(downloadUrl, "./tmp/" + currentDate, { fileName: realTitle + ".pdf" });
-            // await dl.start();
-            exec(`wget -O ./tmp/${currentDate}/${realTitle}.pdf ${downloadUrl}`, function(error, stdout, stderr){
-                if(error){
-                    console.log("An error has occured.");
-                    return;
-                }
-            });
-            filePaths.push({ name: realTitle + ".pdf", path: "./tmp/" + currentDate + "/" + realTitle + ".pdf" });
+            try{
+                const result = execSync(`wget -O ./tmp/${currentDate}/${realTitle}.pdf ${downloadUrl}`);
+                filePaths.push({ name: realTitle + ".pdf", path: "./tmp/" + currentDate + "/" + realTitle + ".pdf" });
+            }catch(e){
+                console.log(e);
+            }
         }
+
         await page.close();
     }
-    setTimeout(function(){
-        console.log(filePaths);
-        if(filePaths.length === 1){
-            res.download(filePaths[0].path, realTitle + ".pdf");
-        }else{
-            res.zip(filePaths, currentDate);
-        }
-    }, 3000);
+    console.log(filePaths);
+    if(filePaths.length === 1){
+        res.download(filePaths[0].path, realTitle + ".pdf");
+    }else{
+        res.zip(filePaths, currentDate);
+    }
 });
 
 app.listen(3000, function(){
