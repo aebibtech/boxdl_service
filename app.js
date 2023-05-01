@@ -38,7 +38,10 @@ app.post("/download", async function(req, res){
         await page.setViewport({ width: 1280, height: 720 });
         await page.goto(links[i], { waitUntil: "networkidle0" });
         const title = await page.title();
-        realTitle = title.slice(0, title.indexOf("."));
+        realTitle = title !== null ? title.slice(0, title.indexOf(".")) : realTitle;
+        if(realTitle !== ""){
+            filePaths.push({ name: realTitle + ".pdf", path: "./tmp/" + currentDate + "/" + realTitle + ".pdf" });
+        }
         console.log("page title:", realTitle);
         const networkRequestsStr = await page.evaluate(function(){
             return JSON.stringify(window.performance.getEntries());
@@ -49,13 +52,8 @@ app.post("/download", async function(req, res){
         let downloadUrl = "";
         for(let j = 0; j < networkRequests.length; j++){
             // console.log(networkRequests[j].name);
-            if( (networkRequests[j].name.includes("public.boxcloud.com/api/2.0/files") || "dl.boxcloud.com/api/2.0/files") && networkRequests[j].name.includes("content?preview=true") ){
+            if(((networkRequests[j].name.includes("public.boxcloud.com/api/2.0/files") || "dl.boxcloud.com/api/2.0/files") && networkRequests[j].name.includes("content?preview=true")) || (networkRequests[j].name.includes("internal_files") && networkRequests[j].name.includes("pdf")) ){
                 downloadUrl = networkRequests[j].name;
-                filePaths.push({ name: realTitle + ".pdf", path: "./tmp/" + currentDate + "/" + realTitle + ".pdf" });
-            }
-            else if(networkRequests[j].name.includes("internal_files") && networkRequests[j].name.includes("pdf")){
-                downloadUrl = networkRequests[j].name;
-                filePaths.push({ name: realTitle + ".pdf", path: "./tmp/" + currentDate + "/" + realTitle + ".pdf" });
             }
         }
         
