@@ -11,19 +11,21 @@ document.addEventListener("DOMContentLoaded", function(){
             return;
         }
         let allLinksValid = false;
-        const invalidLinks = [];
         const links = document.querySelector("form textarea").value.split(/\s/);
 
         links.forEach(function(link){
             allLinksValid = urlChecker(link);
-            if(!urlChecker(link)){
-                invalidLinks.push(link);
-            }
         });
 
         if(allLinksValid){
             const links_str = JSON.stringify({ links: links });
+            const dlbtn = document.getElementById("download-btn");
             try{
+                dlbtn.innerHTML = `
+                <div class="spinner-border text-light" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>`;
+                dlbtn.setAttribute("disabled", true);
                 const response = await fetch("/download", {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
@@ -38,8 +40,12 @@ document.addEventListener("DOMContentLoaded", function(){
                 dLink.href = f;
                 dLink.download = fileName;
                 dLink.click();
+                dlbtn.innerHTML = "Download";
+                dlbtn.removeAttribute("disabled");
             }catch(e){
                 alert("Server error.");
+                dlbtn.innerHTML = "Download";
+                dlbtn.removeAttribute("disabled");
             };
         }else{
             alert("Only put valid box.com links.");
